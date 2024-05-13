@@ -3,6 +3,7 @@ const router = express.Router();
 
 const authRouter = require("./auth.route");
 const userRouter = require("./user.route");
+const restaurantRouter = require("./restaurant.route");
 
 
 router.use(
@@ -13,6 +14,11 @@ router.use(
 router.use(
     "/user",
     userRouter
+);
+
+router.use(
+    "/restaurant",
+    restaurantRouter
 );
 
 module.exports = router;
