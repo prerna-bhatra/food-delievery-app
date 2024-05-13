@@ -27,7 +27,8 @@ exports.registerRestaurant = async (req, res) => {
             outletDescription,
             ownerEmail,
             cuisines,
-            openDays
+            openDays,
+            panCardAddress
         } = req.body;
 
         const newRestaurant = await Restaurant.create({
@@ -53,7 +54,8 @@ exports.registerRestaurant = async (req, res) => {
             ownerEmail,
             cuisines,
             openDays,
-            userId
+            userId,
+            panCardAddress
         });
 
         res.status(201).json({ message: 'Restaurant registered successfully', newRestaurant });
@@ -63,12 +65,83 @@ exports.registerRestaurant = async (req, res) => {
     }
 };
 
-exports.virificationDetailUpdateOrSave = async (req, res) => {
+
+exports.updateRestaurantRegistration = async (req, res) => {
     try {
         const { restaurantId } = req.params;
         console.log({ restaurantId });
         const {
+            name,
+            completeAddress,
+            googleAddress,
+            contactName,
+            contactNumber,
+            country,
+            pincode,
+            receiverContact,
+            state,
+            city,
+            latitude,
+            longitude,
+            ownerName,
+            ownerContact,
+            restaurantImages,
+            startTime,
+            endTime,
+            establishmentType,
+            outletDescription,
+            // ownerEmail,
+            panCardAddress,
+            cuisines,
+            openDays } = req.body;
+
+        const updateRestaurantRegistrationInfo = await Restaurant.update(
+            {
+                name,
+                completeAddress,
+                googleAddress,
+                contactName,
+                contactNumber,
+                country,
+                pincode,
+                receiverContact,
+                state,
+                city,
+                latitude,
+                longitude,
+                ownerName,
+                ownerContact,
+                restaurantImages,
+                startTime,
+                endTime,
+                establishmentType,
+                outletDescription,
+                // ownerEmail,
+                panCardAddress,
+                cuisines,
+                openDays
+            },
+            {
+                where: {
+                    id: restaurantId
+                }
+            }
+
+        );
+
+        res.status(201).json({ message: 'regustration  data  updated successfully', updateRestaurantRegistrationInfo });
+    } catch (error) {
+        console.error('Error creating user address:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+exports.virificationDetailUpdateOrSave = async (req, res) => {
+    try {
+        const { restaurantId } = req.params;
+        const {
             panCardName,
+            panCardAddress,
             panNumber,
             ifscCode,
             fssaiNumber,
@@ -84,7 +157,8 @@ exports.virificationDetailUpdateOrSave = async (req, res) => {
                 fssaiNumber,
                 fssaiExpiryDate,
                 bankAccountType,
-                bankAccountNumber
+                bankAccountNumber,
+                panCardAddress
             },
             {
                 where: {
@@ -116,7 +190,6 @@ exports.restaurantsByUserId = async (req, res) => {
     try {
         const { userId } = req.userId
         const restaurants = await Restaurant.findAll({ userId });
-        console.log({ restaurants });
         res.status(200).json({ message: 'User address created successfully', restaurants });
     } catch (error) {
         console.error('Error creating user address:', error);
@@ -128,8 +201,7 @@ exports.restaurantsByUserId = async (req, res) => {
 exports.myRestaurantById = async (req, res) => {
     try {
         const { restaurantId } = req.params
-        const restaurant = await Restaurant.findOne({ id:restaurantId });
-        console.log({ restaurant });
+        const restaurant = await Restaurant.findByPk(restaurantId);
         res.status(200).json({ message: 'User address created successfully', restaurant });
     } catch (error) {
         console.error('Error creating user address:', error);

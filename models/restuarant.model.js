@@ -100,6 +100,10 @@ const Restaurant = sequelize.define('Restaurant', {
         type: DataTypes.STRING,
         allowNull: true
     },
+    panCardAddress: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
     panCardImage: {
         type: DataTypes.STRING,
         allowNull: true
