@@ -70,7 +70,6 @@ exports.registerRestaurant = async (req, res) => {
 exports.updateRestaurantRegistration = async (req, res) => {
     try {
         const { restaurantId } = req.params;
-        console.log({ restaurantId });
         const {
             name,
             completeAddress,
@@ -210,7 +209,6 @@ exports.myRestaurantById = async (req, res) => {
     }
 };
 
-
 exports.restaurantDocumentOrImagesUpload = async (req, res) => {
     try {
         const form = new formidable.IncomingForm();
@@ -220,17 +218,13 @@ exports.restaurantDocumentOrImagesUpload = async (req, res) => {
                     error: 'Image could not be uploaded'
                 })
             }
-
-            console.log({ files, d: files.document });
             const documentType = fields.documentType
             const restaurantId = fields.restaurantId[0];
             if (files.document) {
                 const fileLocation = await uploadFileToS3(files.document[0]);
                 if (fileLocation) {
-                    console.log({ documentType });
                     switch (documentType[0]) {
                         case 'panCardImage':
-                            console.log("PAN CARD CASE");
                             saveImage(restaurantId, { panCardImage: fileLocation });
                             return res.status(200).json({ error: ' document added  successfully' });
                             break;
@@ -254,7 +248,6 @@ exports.restaurantDocumentOrImagesUpload = async (req, res) => {
 };
 
 const saveImage = async (restuarantId, updateFields) => {
-    console.log({ updateFields, restuarantId });
     const updateImage = await Restaurant.update(
         updateFields,
         {
@@ -263,11 +256,7 @@ const saveImage = async (restuarantId, updateFields) => {
             }
         }
     );
-
-    console.log({ updateImage });
-
     return updateImage;
-
 }
 
 
