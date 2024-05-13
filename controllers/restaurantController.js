@@ -1,5 +1,4 @@
-const { Restaurant } = require('../models/userAddress.model');
-// const { User } = require('../models/user.model');
+const { Restaurant } = require('../models/restuarant.model');
 const { where } = require('sequelize');
 
 exports.registerRestaurant = async (req, res) => {

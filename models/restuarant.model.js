@@ -1,4 +1,4 @@
-import { User } from "./user.model";
+const {User} = require('./user.model.js'); // Assuming you have a User model
 
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../db/index.js');
@@ -57,7 +57,7 @@ const Restaurant = sequelize.define('Restaurant', {
     },
     restaurantImages: {
         type: DataTypes.ARRAY(DataTypes.STRING),
-        allowNull: false
+        allowNull: true
     },
     startTime: {
         type: DataTypes.TIME,
@@ -90,43 +90,43 @@ const Restaurant = sequelize.define('Restaurant', {
     },
     menuImages: {
         type: DataTypes.ARRAY(DataTypes.STRING),
-        allowNull: false
+        allowNull: true
     },
     panNumber: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
     panCardName: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
     panCardImage: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
     bankAccountNumber: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
     bankAccountType: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
     ifscCode: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
     fssaiNumber: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
     fssaiExpiryDate: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
     fssaiImage: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
 });
 
