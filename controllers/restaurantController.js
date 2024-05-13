@@ -1,5 +1,6 @@
 const { Restaurant } = require('../models/restuarant.model');
 const { where } = require('sequelize');
+const formidable = require("formidable")
 
 exports.registerRestaurant = async (req, res) => {
     try {
@@ -62,9 +63,10 @@ exports.registerRestaurant = async (req, res) => {
     }
 };
 
-
 exports.virificationDetailUpdateOrSave = async (req, res) => {
     try {
+        const { restaurantId } = req.params;
+        console.log({ restaurantId });
         const {
             panCardName,
             panNumber,
@@ -74,19 +76,33 @@ exports.virificationDetailUpdateOrSave = async (req, res) => {
             bankAccountType,
             bankAccountNumber } = req.body;
 
+        const verificationInfo = await Restaurant.update(
+            {
+                panCardName,
+                panNumber,
+                ifscCode,
+                fssaiNumber,
+                fssaiExpiryDate,
+                bankAccountType,
+                bankAccountNumber
+            },
+            {
+                where: {
+                    id: restaurantId
+                }
+            }
 
+        );
 
-        // res.status(201).json({ message: 'User address created successfully', userAddress: newUserAddress });
+        res.status(201).json({ message: 'verification data  updated successfully' });
     } catch (error) {
         console.error('Error creating user address:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
-
 
 exports.restaurantDocument = async (req, res) => {
     try {
-        const { addressType, houseName, latitude, longitude, area, landMark, receiverContact, googleAddress } = req.body;
 
 
         // res.status(201).json({ message: 'User address created successfully', userAddress: newUserAddress });
@@ -95,4 +111,31 @@ exports.restaurantDocument = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+
+exports.restaurantsByUserId = async (req, res) => {
+    try {
+        const { userId } = req.userId
+        const restaurants = await Restaurant.findAll({ userId });
+        console.log({ restaurants });
+        res.status(200).json({ message: 'User address created successfully', restaurants });
+    } catch (error) {
+        console.error('Error creating user address:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+//  only restaurant user  can access it  ( document detauls etc)
+exports.myRestaurantById = async (req, res) => {
+    try {
+        const { restaurantId } = req.params
+        const restaurant = await Restaurant.findOne({ id:restaurantId });
+        console.log({ restaurant });
+        res.status(200).json({ message: 'User address created successfully', restaurant });
+    } catch (error) {
+        console.error('Error creating user address:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+
 
