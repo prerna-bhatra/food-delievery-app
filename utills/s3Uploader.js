@@ -5,7 +5,7 @@ const fs = require('fs');
 // Configure AWS with your credentials
 AWS.config.update({
   accessKeyId: process.env.ACCESS_KEY_ID,
-  secretAccessKey: process.env.ACCESS_KEY_ID.SECRET_ACCESS_KEY,
+  secretAccessKey: process.env.SECRET_ACCESS_KEY,
   region: process.env.ACCESS_KEY_ID.REGION
 });
 
@@ -14,13 +14,18 @@ const s3 = new AWS.S3();
 
 // Handle file upload
 const uploadFileToS3 = (file) => {
-  const fileName = file.name;
-  const fileStream = fs.createReadStream(file.path);
+    console.log({env:process.env.ACCESS_KEY_ID});
+    console.log({file , path:file.filepath});
+  const fileName = file.originalFilename;
+  const mimeType = file.mimeType;
+  const fileStream = fs.createReadStream(file.filepath);
 
+  console.log({fileStream});
   const params = {
     Bucket: process.env.BUCKET_NAME,
     Key: fileName,
     Body: fileStream,
+    mimeType,
     ACL: 'public-read' // Adjust the access control as needed
   };
 

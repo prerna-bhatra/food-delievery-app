@@ -1,4 +1,5 @@
 const { Restaurant } = require('../models/restuarant.model');
+const { uploadFileToS3 } = require("../utills/s3Uploader");
 const { where } = require('sequelize');
 const formidable = require("formidable")
 
@@ -208,6 +209,67 @@ exports.myRestaurantById = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+
+
+exports.restaurantDocumentOrImagesUpload = async (req, res) => {
+    try {
+        const form = new formidable.IncomingForm();
+        form.parse(req, async (err, fields, files) => {
+            if (err) {
+                return res.status(400).json({
+                    error: 'Image could not be uploaded'
+                })
+            }
+
+            console.log({ files, d: files.document });
+            const documentType = fields.documentType
+            const restaurantId = fields.restaurantId[0];
+            if (files.document) {
+                const fileLocation = await uploadFileToS3(files.document[0]);
+                if (fileLocation) {
+                    console.log({ documentType });
+                    switch (documentType[0]) {
+                        case 'panCardImage':
+                            console.log("PAN CARD CASE");
+                            saveImage(restaurantId, { panCardImage: fileLocation });
+                            return res.status(200).json({ error: ' document added  successfully' });
+                            break;
+                        case 'fssaiImage':
+                            saveImage({ fssaiImage: fileLocation })
+                            return res.status(200).json({ error: ' document added  successfully' });
+                            break;
+                        default:
+                            return res.status(400).json({ error: 'Invalid document type' });
+                            break;
+
+                    }
+                }
+            }
+        })
+
+    } catch (error) {
+        console.error('Error creating Image uploading:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+const saveImage = async (restuarantId, updateFields) => {
+    console.log({ updateFields, restuarantId });
+    const updateImage = await Restaurant.update(
+        updateFields,
+        {
+            where: {
+                id: restuarantId
+            }
+        }
+    );
+
+    console.log({ updateImage });
+
+    return updateImage;
+
+}
+
 
 
 
