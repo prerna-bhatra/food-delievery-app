@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const auth = require('./routes/auth.route');
 const user = require('./routes/user.route');
 const { sequelize } = require('./db');
+const socketHandler = require('./socket/socket.js');
 
 const indexRouter = require("./routes");
 
@@ -17,8 +18,6 @@ const PORT = process.env.PORT || 3005;
 app.use(bodyParser.json());
 app.use(cors())
 
-// app.use('/auth', auth);
-// app.use('/user', user);
 
 app.use("/api" ,indexRouter )
 
@@ -30,6 +29,8 @@ sequelize.sync({ force: false })
         console.error('Error syncing database:', err);
     });
 
-app.listen(PORT, () => {
+const server =app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
+
+socketHandler(server);

@@ -14,13 +14,12 @@ const s3 = new AWS.S3();
 
 // Handle file upload
 const uploadFileToS3 = (file) => {
-    console.log({env:process.env.ACCESS_KEY_ID});
-    console.log({file , path:file.filepath});
+
   const fileName = file.originalFilename;
   const mimeType = file.mimeType;
   const fileStream = fs.createReadStream(file.filepath);
 
-  console.log({fileStream});
+  // console.log({fileStream});
   const params = {
     Bucket: process.env.BUCKET_NAME,
     Key: fileName,

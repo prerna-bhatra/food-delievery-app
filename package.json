@@ -16,6 +16,7 @@
     "@react-google-maps/api": "^2.19.3",
     "@types/google-map-react": "^2.1.10",
     "aws-sdk": "^2.1618.0",
+    "axios": "^1.6.8",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
     "connect-mongodb-session": "^4.0.0",
@@ -29,7 +30,8 @@
     "mongoose": "^8.1.0",
     "pg": "^8.11.5",
     "sequelize": "^6.37.3",
-    "sequelize-cli": "^6.6.2"
+    "sequelize-cli": "^6.6.2",
+    "socket.io": "^4.7.5"
   },
   "devDependencies": {
     "@types/google.maps": "^3.55.7",
