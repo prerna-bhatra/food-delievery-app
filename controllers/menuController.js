@@ -91,7 +91,7 @@ exports.addDishBulk = async (req, res) => {
 exports.dishesByRestaurantID = async (req, res) => {
     try {
         const { restaurantId } = req.params;
-        const dishes = await Menu.findAll({ restaurantId });
+        const dishes = await Menu.findAll({where:{ restaurantId} });
         res.status(200).json({ message: 'Dishes fetched successfully', dishes });
     } catch (error) {
         console.error('Error creating user address:', error);

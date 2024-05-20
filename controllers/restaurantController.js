@@ -1,6 +1,7 @@
 const { Restaurant } = require('../models/restuarant.model');
+const { Menu } = require('../models/menu.model');
 const { uploadFileToS3 } = require("../utills/s3Uploader");
-const { where } = require('sequelize');
+const { where, Op } = require('sequelize');
 const formidable = require("formidable")
 
 exports.registerRestaurant = async (req, res) => {
@@ -203,6 +204,80 @@ exports.myRestaurantById = async (req, res) => {
         const { restaurantId } = req.params
         const restaurant = await Restaurant.findByPk(restaurantId);
         res.status(200).json({ message: 'User address created successfully', restaurant });
+    } catch (error) {
+        console.error('Error creating user address:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+exports.restaurantById = async (req, res) => {
+    try {
+        const { restaurantId } = req.params
+        const restaurant = await Restaurant.findByPk(
+            restaurantId,
+            {
+                include: Menu,
+                attributes: ['id', 'name', 'completeAddress', 'restaurantImages']
+            }
+        );
+        res.status(200).json({ message: 'Fetched', restaurant });
+    } catch (error) {
+        console.error('Error creating user address:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+exports.searchByDishName = async (req, res) => {
+    try {
+        const { dishName } = req.query;
+        console.log({ dishName });
+        const restaurants = await Restaurant.findAll({
+            include: [{
+                model: Menu,
+                where: {
+                    dishname: dishName
+                },
+                required: true
+            }],
+            attributes: ['id', 'name', 'completeAddress', 'restaurantImages']
+        });
+
+        res.status(200).json({ message: 'Restaurants fetched successfully', restaurants });
+    } catch (error) {
+        console.error('Error searching by dishname:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+exports.restaurantOrMenuSearch = async (req, res) => {
+    console.log("restaurantOrMenuSearch");
+    try {
+        console.log({ query: req.query });
+        const { searchString } = req.query;
+        console.log({ searchString });
+        if (!searchString || !searchString.trim().length) {
+            res.status(500).json({ error: 'Invalid Request' });
+        }
+
+        const menus = await Menu.findAll({
+            where: {
+                dishname: {
+                    [Op.like]: `${searchString}%`
+                }
+            },
+            attributes: ['id', 'dishname', 'price', 'dishImage']
+        });
+
+        const restaurants = await Restaurant.findAll({
+            where: {
+                name: {
+                    [Op.like]: `%${searchString}%`
+                }
+            },
+            attributes: ['id', 'name', 'completeAddress']
+        });
+
+        res.status(200).json({ message: 'User address created successfully', restaurants, menus });
     } catch (error) {
         console.error('Error creating user address:', error);
         res.status(500).json({ error: 'Internal Server Error' });
