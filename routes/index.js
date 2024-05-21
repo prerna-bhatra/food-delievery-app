@@ -5,7 +5,7 @@ const authRouter = require("./auth.route");
 const userRouter = require("./user.route");
 const restaurantRouter = require("./restaurant.route");
 const menuRouter = require("./menu.route");
-
+const orderRouter = require("./order.route");
 
 router.use(
     "/auth",
@@ -25,6 +25,11 @@ router.use(
 router.use(
     "/menu",
     menuRouter
+);
+
+router.use(
+    "/order",
+    orderRouter
 );
 
 module.exports = router;
