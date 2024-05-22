@@ -32,7 +32,7 @@ exports.createOrder = async (req, res) => {
 };
 
 // only restuarant owner can do this
-exports.updateOrder = async (req, res) => {
+exports.updateOrderStatus = async (req, res) => {
     try {
         const { orderId } = req.params
         const { status } = req.body;
