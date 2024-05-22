@@ -18,10 +18,19 @@ const secretKey = process.env.JWT_SECRET; // Replace with your actual secret key
                 return res.status(401).json({ message: "Invalid token." });
             }
         }
-        // console.log({decoded});
+        console.log({decoded});
         req.userId = decoded.userId;
         next();
     });
+};
+
+
+const checkRestaurantMiddleware = (req, res, next) => {
+    const userType = req.decodedUser.userType;
+    if (userType !== 'admin') {
+        return res.status(403).json({ message: "Forbidden. User does not have required permissions." });
+    }
+    next();
 };
 
 const checkAdminMiddleware = (req, res, next) => {

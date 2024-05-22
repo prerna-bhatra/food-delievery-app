@@ -5,7 +5,7 @@ const { where, Op } = require('sequelize');
 exports.createOrder = async (req, res) => {
     console.log({Order});
     try {
-        const { userId } = req.userId
+        const { userId } = req
         const { restaurantId, foodItems, totalPrice, checkoutAddress,paymentMethod } = req.body;
 
         console.log({
@@ -71,7 +71,8 @@ exports.orderByID = async (req, res) => {
 
 exports.orderByUserId = async (req, res) => {
     try {
-        const { userId } = req.userId
+        const { userId } = req;
+        console.log({userId});
         const orders = await Order.findAll({ where: { userId: userId } });
 
         if (!orders) {
@@ -82,7 +83,7 @@ exports.orderByUserId = async (req, res) => {
 
         res.status(200).json({ message: 'Order fetched successfully' ,orders});
     } catch (error) {
-        console.error('Error creating user address:', error);
+        console.error('Error:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };

@@ -178,8 +178,6 @@ exports.virificationDetailUpdateOrSave = async (req, res) => {
 
 exports.restaurantDocument = async (req, res) => {
     try {
-
-
         // res.status(201).json({ message: 'User address created successfully', userAddress: newUserAddress });
     } catch (error) {
         console.error('Error creating user address:', error);
@@ -189,8 +187,9 @@ exports.restaurantDocument = async (req, res) => {
 
 exports.restaurantsByUserId = async (req, res) => {
     try {
-        const { userId } = req.userId
-        const restaurants = await Restaurant.findAll({ userId });
+        const { userId } = req;
+        console.log({ userId });
+        const restaurants = await Restaurant.findAll({ where: { userId } });
         res.status(200).json({ message: 'User address created successfully', restaurants });
     } catch (error) {
         console.error('Error creating user address:', error);
@@ -203,7 +202,7 @@ exports.myRestaurantById = async (req, res) => {
     try {
         const { restaurantId } = req.params
         const restaurant = await Restaurant.findByPk(restaurantId);
-        res.status(200).json({ message: 'User address created successfully', restaurant });
+        res.status(200).json({ message: 'successfully', restaurant });
     } catch (error) {
         console.error('Error creating user address:', error);
         res.status(500).json({ error: 'Internal Server Error' });
