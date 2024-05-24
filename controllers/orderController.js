@@ -1,12 +1,12 @@
 const { Order } = require('../models/order.model');
 const { where, Op } = require('sequelize');
-
+const { User } = require('../models/user.model');
 
 exports.createOrder = async (req, res) => {
-    console.log({Order});
+    console.log({ Order });
     try {
         const { userId } = req
-        const { restaurantId, foodItems, totalPrice, checkoutAddress,paymentMethod } = req.body;
+        const { restaurantId, foodItems, totalPrice, checkoutAddress, paymentMethod } = req.body;
 
         console.log({
             foodItems,
@@ -61,7 +61,7 @@ exports.orderByID = async (req, res) => {
             return res.status(404).json({ error: 'Order not found' });
         }
 
-        res.status(200).json({ message: 'Order fetched successfully' ,order});
+        res.status(200).json({ message: 'Order fetched successfully', order });
     } catch (error) {
         console.error('Error creating user address:', error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -72,16 +72,16 @@ exports.orderByID = async (req, res) => {
 exports.orderByUserId = async (req, res) => {
     try {
         const { userId } = req;
-        console.log({userId});
+        console.log({ userId });
         const orders = await Order.findAll({ where: { userId: userId } });
+
+        console.log({orders});
 
         if (!orders) {
             throw new Error('No orders found for the given user');
         }
 
-        // return orders;
-
-        res.status(200).json({ message: 'Order fetched successfully' ,orders});
+        res.status(200).json({ message: 'Order fetched successfully', orders });
     } catch (error) {
         console.error('Error:', error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -92,15 +92,45 @@ exports.orderByUserId = async (req, res) => {
 exports.orderByRestaurantId = async (req, res) => {
     try {
         const { restaurantId } = req.params
-        const orders = await Order.findAll({ where: { restaurantId: restaurantId } });
+        const orders = await Order.findAll({
+            where: { restaurantId: restaurantId },
+            include: [{
+                model: User,
+                attributes: ['username', 'phone'] // Specify the attributes you want to include
+            }]
+        });
 
         if (!orders) {
             throw new Error('No orders found for the given user');
         }
 
-        res.status(200).json({ message: 'Orders fetched successfully' ,orders});
+        res.status(200).json({ message: 'Orders fetched successfully', orders });
     } catch (error) {
         console.error('Error creating user address:', error);
         res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+
+exports.cancelOrder = async (req, res) => {
+    const { orderId } = req.params;
+
+    try {
+        const order = await Order.findByPk(orderId);
+        if (!order) {
+            return res.status(404).json({ message: 'Order not found' });
+        }
+
+        if (order.orderStatus === 'cancelled') {
+            return res.status(400).json({ message: 'Order is already cancelled' });
+        }
+
+        order.orderStatus = 'cancelled';
+        await order.save();
+
+        return res.status(200).json({ message: 'Order cancelled successfully', order });
+    } catch (error) {
+        console.error('Error cancelling order:', error);
+        return res.status(500).json({ message: 'Internal server error' });
     }
 };
