@@ -16,10 +16,10 @@ router.post('/register', checkTokenMiddleware, registerRestaurant);
 router.post('/update-registration-details/:restaurantId', checkTokenMiddleware, updateRestaurantRegistration);
 router.post('/verification-details/:restaurantId', checkTokenMiddleware, virificationDetailUpdateOrSave);
 router.get('/my-restaurant/:restaurantId', checkTokenMiddleware, myRestaurantById);
-router.get('/search-by-dishname', checkTokenMiddleware, searchByDishName);
+router.get('/search-by-dishname', searchByDishName);
 router.get('/search/:restaurantId', checkTokenMiddleware, restaurantById);
 router.get('/my-restaurants', checkTokenMiddleware, restaurantsByUserId);
 router.post('/upload', checkTokenMiddleware , restaurantDocumentOrImagesUpload);
-router.get('/search-item', checkTokenMiddleware , restaurantOrMenuSearch);
+router.get('/search-item' , restaurantOrMenuSearch);
 
 module.exports = router;
