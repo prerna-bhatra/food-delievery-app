@@ -113,7 +113,9 @@ exports.orderByRestaurantId = async (req, res) => {
 
 
 exports.cancelOrder = async (req, res) => {
+    console.log("cancelOrder");
     const { orderId } = req.params;
+    console.log("cancelOrder" , orderId);
 
     try {
         const order = await Order.findByPk(orderId);

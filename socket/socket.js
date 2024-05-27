@@ -22,7 +22,7 @@ const socketHandler = (server) => {
                     message: stringData,
                     // token: data.token
                 });
-                console.log({ response, data: response?.data });
+                // console.log({ response, data: response?.data });
                 socket.emit('botReply', response.data);
             } catch (error) {
                 console.error('Error sending message to Rasa:', error);
