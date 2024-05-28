@@ -14,10 +14,10 @@ const socketHandler = (server) => {
         console.log('New client connected');
 
         socket.on('sendMessage', async (data) => {
-            console.log({ data , token: data.token });
+            // console.log({ data , token: data.token });
             const stringData = JSON.stringify(data)
             try {
-                const response = await axios.post('http://localhost:5005/webhooks/rest/webhook', {
+                const response = await axios.post('http://65.0.185.74:5005/webhooks/rest/webhook', {
                     sender: 'user',
                     message: stringData,
                     // token: data.token
