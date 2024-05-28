@@ -14,7 +14,7 @@ const socketHandler = (server) => {
         console.log('New client connected');
 
         socket.on('sendMessage', async (data) => {
-            // console.log({ data , token: data.token });
+            console.log({ data , token: data.token });
             const stringData = JSON.stringify(data)
             try {
                 const response = await axios.post('http://65.0.185.74:5005/webhooks/rest/webhook', {
@@ -22,7 +22,7 @@ const socketHandler = (server) => {
                     message: stringData,
                     // token: data.token
                 });
-                // console.log({ response, data: response?.data });
+                console.log({ response, data: response?.data });
                 socket.emit('botReply', response.data);
             } catch (error) {
                 console.error('Error sending message to Rasa:', error);
