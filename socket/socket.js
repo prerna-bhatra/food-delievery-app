@@ -5,10 +5,11 @@ const axios = require('axios');
 const socketHandler = (server) => {
     const io = socketIo(server, {
         cors: {
-            origin: "http://localhost:3000",
+            origin: "*",
             methods: ["GET", "POST"]
         }
     });
+    
 
     io.on('connection', (socket) => {
         console.log('New client connected');
