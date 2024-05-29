@@ -68,15 +68,10 @@ exports.orderByID = async (req, res) => {
     }
 };
 
-
 exports.orderByUserId = async (req, res) => {
     try {
         const { userId } = req;
-        console.log({ userId });
         const orders = await Order.findAll({ where: { userId: userId } });
-
-        console.log({orders});
-
         if (!orders) {
             throw new Error('No orders found for the given user');
         }
@@ -87,7 +82,6 @@ exports.orderByUserId = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
-
 
 exports.orderByRestaurantId = async (req, res) => {
     try {
@@ -115,7 +109,7 @@ exports.orderByRestaurantId = async (req, res) => {
 exports.cancelOrder = async (req, res) => {
     console.log("cancelOrder");
     const { orderId } = req.params;
-    console.log("cancelOrder" , orderId);
+    console.log("cancelOrder", orderId);
 
     try {
         const order = await Order.findByPk(orderId);
@@ -123,8 +117,16 @@ exports.cancelOrder = async (req, res) => {
             return res.status(404).json({ message: 'Order not found' });
         }
 
+        const orderCreationTime = new Date(order.createdAt);
+        const currentTime = new Date();
+        const timeDifference = (currentTime - orderCreationTime) / 1000; // Difference in seconds
+
         if (order.orderStatus === 'cancelled') {
             return res.status(400).json({ message: 'Order is already cancelled' });
+        }
+
+        if (timeDifference > 60) {
+            return res.status(400).json({ message: 'Order can only be cancelled within 60 seconds of placing' });
         }
 
         order.orderStatus = 'cancelled';
