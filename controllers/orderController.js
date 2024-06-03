@@ -107,7 +107,6 @@ exports.orderByRestaurantId = async (req, res) => {
 
 
 exports.cancelOrder = async (req, res) => {
-    console.log("cancelOrder");
     const { orderId } = req.params;
     console.log("cancelOrder", orderId);
 
@@ -133,6 +132,30 @@ exports.cancelOrder = async (req, res) => {
         await order.save();
 
         return res.status(200).json({ message: 'Order cancelled successfully', order });
+    } catch (error) {
+        console.error('Error cancelling order:', error);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+exports.changeAddress = async (req, res) => {
+    const { orderId } = req.params;
+    const { newAddress } = req.body;
+    console.log({newAddress});
+    try {
+        const order = await Order.findByPk(orderId);
+        if (!order) {
+            return res.status(404).json({ message: 'Order not found' });
+        }
+
+        if (order.orderStatus === 'cancelled') {
+            return res.status(200).json({ message: 'Order is already cancelled , can not be changed address' });
+        }
+
+        order.checkoutAddress = newAddress;
+        await order.save();
+
+        return res.status(200).json({ message: 'Order address updates successfully', order });
     } catch (error) {
         console.error('Error cancelling order:', error);
         return res.status(500).json({ message: 'Internal server error' });

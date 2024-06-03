@@ -5,8 +5,6 @@ const secretKey = process.env.JWT_SECRET; // Replace with your actual secret key
  const checkTokenMiddleware = (req, res, next) => {
     const token = req.headers.authorization; 
 
-    console.log({token});
-
     // console.log({token});
     if (!token) {
         return res.status(401).json({ message: "Access denied. No token provided." });
@@ -20,7 +18,6 @@ const secretKey = process.env.JWT_SECRET; // Replace with your actual secret key
                 return res.status(401).json({ message: "Invalid token." });
             }
         }
-        console.log({decoded});
         req.userId = decoded.userId;
         next();
     });
