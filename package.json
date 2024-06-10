@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@google-cloud/storage": "^7.11.2",
     "@googlemaps/markerclusterer": "^2.5.3",
     "@googlemaps/react-wrapper": "^1.1.35",
     "@react-google-maps/api": "^2.19.3",

@@ -2,27 +2,21 @@ const { Sequelize, DataTypes } = require('sequelize');
 
 // const sequelize = new Sequelize(process.env.DBURLDEV);
 
-// const sequelize = new Sequelize('postgres-food', 'postgres', 'PravyaBhatra1998', {
-//     host: 'postgres-food.c1gi0mumgho5.ap-south-1.rds.amazonaws.com',
-//     dialect: 'postgres',
-//     port: 5432,
-//     logging: false // Disable logging SQL queries (optional)
-//   });
-
 
 const sequelize = new Sequelize(
-    'food-app',
-    'postgres',
-    'PravyaBhatra1998',
+    process.env.DB_NAME,
+    process.env.DB_USER,
+    process.env.DB_PASSWORD,
     {
-      host:  'postgres-food.c1gi0mumgho5.ap-south-1.rds.amazonaws.com',
+      host:  process.env.DB_HOST,
       dialect:  'postgres',
-      dialectOptions: {
-        ssl: {
-          require: true, // This will help you. But you will see nwe error
-          rejectUnauthorized: false // This line will fix new error
-        }
-      },    }
+      // dialectOptions: {
+      //   ssl: {
+      //     require: true, // This will help you. But you will see nwe error
+      //     rejectUnauthorized: false // This line will fix new error
+      //   }
+      // },   
+     }
   );
 
 module.exports = {

@@ -1,6 +1,6 @@
 const { Restaurant } = require('../models/restuarant.model');
 const { Menu } = require('../models/menu.model');
-const { uploadFileToS3 } = require("../utills/s3Uploader");
+const { uploadFile } = require("../utills/gcpUploader");
 const { where, Op } = require('sequelize');
 const formidable = require("formidable")
 
@@ -294,8 +294,10 @@ exports.restaurantDocumentOrImagesUpload = async (req, res) => {
             }
             const documentType = fields.documentType
             const restaurantId = fields.restaurantId[0];
+            console.log({d:files.document});
             if (files.document) {
-                const fileLocation = await uploadFileToS3(files.document[0]);
+                const fileLocation = await uploadFile(files.document[0]);
+                console.log({fileLocation});
                 if (fileLocation) {
                     switch (documentType[0]) {
                         case 'panCardImage':
