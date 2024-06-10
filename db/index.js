@@ -1,7 +1,7 @@
 const { Sequelize, DataTypes } = require('sequelize');
 
-// const sequelize = new Sequelize(process.env.DBURLDEV);
 
+// console.log({db:process.env.DB_HOST});
 
 const sequelize = new Sequelize(
     process.env.DB_NAME,
@@ -10,14 +10,17 @@ const sequelize = new Sequelize(
     {
       host:  process.env.DB_HOST,
       dialect:  'postgres',
-      // dialectOptions: {
-      //   ssl: {
-      //     require: true, // This will help you. But you will see nwe error
-      //     rejectUnauthorized: false // This line will fix new error
-      //   }
-      // },   
+      port: '10020',
+      dialectOptions: {
+        ssl: {
+          require: true, // This will help you. But you will see nwe error
+          rejectUnauthorized: false // This line will fix new error
+        }
+      },   
      }
   );
+
+  // console.log({sequelize});
 
 module.exports = {
     sequelize
