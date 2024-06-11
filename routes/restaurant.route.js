@@ -8,7 +8,8 @@ const { registerRestaurant,
       restaurantDocumentOrImagesUpload,
       restaurantOrMenuSearch,
       restaurantById,
-      searchByDishName
+      searchByDishName,
+      restaurantImagesUpload
     } = require('../controllers/restaurantController');
 const { checkTokenMiddleware } = require('../middlewares/authMiddleware.middleware');
 
@@ -20,6 +21,7 @@ router.get('/search-by-dishname', searchByDishName);
 router.get('/search/:restaurantId', restaurantById);
 router.get('/my-restaurants', checkTokenMiddleware, restaurantsByUserId);
 router.post('/upload', checkTokenMiddleware , restaurantDocumentOrImagesUpload);
+router.post('/restaurant-images', checkTokenMiddleware , restaurantImagesUpload);
 router.get('/search-item' , restaurantOrMenuSearch);
 
 module.exports = router;

@@ -216,7 +216,7 @@ exports.restaurantById = async (req, res) => {
             restaurantId,
             {
                 include: Menu,
-                attributes: ['id', 'name', 'completeAddress', 'restaurantImages']
+                attributes: ['id', 'name', 'completeAddress', 'restaurantImages', 'city' ,'cuisines']
             }
         );
         res.status(200).json({ message: 'Fetched', restaurant });
@@ -261,7 +261,7 @@ exports.restaurantOrMenuSearch = async (req, res) => {
         const menus = await Menu.findAll({
             where: {
                 dishname: {
-                    [Op.like]: `${searchString}%`
+                    [Op.like]: `%${searchString}%`
                 }
             },
             attributes: ['id', 'dishname', 'price', 'dishImage']
@@ -313,6 +313,35 @@ exports.restaurantDocumentOrImagesUpload = async (req, res) => {
                             break;
 
                     }
+                }
+            }
+        })
+
+    } catch (error) {
+        console.error('Error creating Image uploading:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+
+exports.restaurantImagesUpload = async (req, res) => {
+    try {
+        const form = new formidable.IncomingForm();
+        form.parse(req, async (err, fields, files) => {
+            if (err) {
+                return res.status(400).json({
+                    error: 'Image could not be uploaded'
+                })
+            }
+            const documentType = fields.documentType
+            const restaurantId = fields.restaurantId[0];
+            console.log({restaurantId});
+            console.log({d:files.document});
+            if (files.document) {
+                const fileLocation = await uploadFile(files.document[0]);
+                console.log({fileLocation});
+                if (fileLocation) {
+                   
                 }
             }
         })
