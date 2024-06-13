@@ -216,7 +216,7 @@ exports.restaurantById = async (req, res) => {
             restaurantId,
             {
                 include: Menu,
-                attributes: ['id', 'name', 'completeAddress', 'restaurantImages', 'city' ,'cuisines']
+                attributes: ['id', 'name', 'completeAddress', 'restaurantImages', 'city', 'cuisines']
             }
         );
         res.status(200).json({ message: 'Fetched', restaurant });
@@ -294,10 +294,10 @@ exports.restaurantDocumentOrImagesUpload = async (req, res) => {
             }
             const documentType = fields.documentType
             const restaurantId = fields.restaurantId[0];
-            console.log({d:files.document});
+            console.log({ d: files.document });
             if (files.document) {
                 const fileLocation = await uploadFile(files.document[0]);
-                console.log({fileLocation});
+                console.log({ fileLocation });
                 if (fileLocation) {
                     switch (documentType[0]) {
                         case 'panCardImage':
@@ -323,7 +323,6 @@ exports.restaurantDocumentOrImagesUpload = async (req, res) => {
     }
 };
 
-
 exports.restaurantImagesUpload = async (req, res) => {
     try {
         const form = new formidable.IncomingForm();
@@ -331,26 +330,79 @@ exports.restaurantImagesUpload = async (req, res) => {
             if (err) {
                 return res.status(400).json({
                     error: 'Image could not be uploaded'
-                })
+                });
             }
-            const documentType = fields.documentType
             const restaurantId = fields.restaurantId[0];
-            console.log({restaurantId});
-            console.log({d:files.document});
+
+            console.log({ restaurantId });
+
             if (files.document) {
                 const fileLocation = await uploadFile(files.document[0]);
-                console.log({fileLocation});
+                // const fileLocation="TESTING";
+                console.log({ fileLocation });
                 if (fileLocation) {
-                   
-                }
-            }
-        })
+                    const restaurant = await Restaurant.findByPk(restaurantId);
+                    console.log({restaurant});
+                    if (!restaurant) {
+                        return res.status(404).json({ error: 'Restaurant not found' });
+                    }
 
+                    console.log({images:restaurant.restaurantImages});
+
+                    const updatedImages = restaurant.restaurantImages && Array.isArray(restaurant.restaurantImages)
+                        ? [...restaurant.restaurantImages, fileLocation]
+                        : [fileLocation];
+
+                    
+                    console.log({updatedImages});
+
+                    restaurant.restaurantImages = updatedImages;
+
+                    await restaurant.save();
+                    res.status(200).json({
+                        message: 'Image uploaded and added successfully',
+                        fileLocation
+                    });
+                }
+            } else {
+                res.status(400).json({
+                    error: 'No document uploaded'
+                });
+            }
+        });
     } catch (error) {
-        console.error('Error creating Image uploading:', error);
+        console.error('Error uploading image:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+
+
+exports.deleteRestaurantImage = async (req, res) => {
+    const { restaurantId, imageUrl } = req.body;
+
+    try {
+        const restaurant = await Restaurant.findByPk(restaurantId);
+        if (!restaurant) {
+            return res.status(404).json({ error: 'Restaurant not found' });
+        }
+
+        const updatedImages = restaurant.restaurantImages.filter(image => image !== imageUrl);
+        restaurant.restaurantImages = updatedImages;
+
+        await restaurant.save();
+
+        // await deleteFile(imageUrl);
+
+        res.status(200).json({
+            message: 'Image removed successfully',
+            updatedImages
+        });
+    } catch (error) {
+        console.error('Error deleting image:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
 
 const saveImage = async (restuarantId, updateFields) => {
     const updateImage = await Restaurant.update(

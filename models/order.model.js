@@ -19,7 +19,7 @@ const Order = sequelize.define('Order', {
     orderStatus: {
         type: DataTypes.STRING, // pending , confirmed , out for delivery , cancelled , rejected , delivered
         allowNull: false,
-        defaultValue:'pending'
+        defaultValue: 'pending'
     },
     totalPrice: {
         type: DataTypes.INTEGER,
