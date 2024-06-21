@@ -1,6 +1,6 @@
 const { Restaurant } = require('../models/restuarant.model');
 const { Menu } = require('../models/menu.model');
-const { uploadFile } = require("../utills/gcpUploader");
+const { uploadFileToS3 } = require("../utills/s3Uploader");
 const { where, Op } = require('sequelize');
 const formidable = require("formidable")
 
@@ -296,7 +296,7 @@ exports.restaurantDocumentOrImagesUpload = async (req, res) => {
             const restaurantId = fields.restaurantId[0];
             console.log({ d: files.document });
             if (files.document) {
-                const fileLocation = await uploadFile(files.document[0]);
+                const fileLocation = await uploadFileToS3(files.document[0]);
                 console.log({ fileLocation });
                 if (fileLocation) {
                     switch (documentType[0]) {
@@ -337,7 +337,7 @@ exports.restaurantImagesUpload = async (req, res) => {
             console.log({ restaurantId });
 
             if (files.document) {
-                const fileLocation = await uploadFile(files.document[0]);
+                const fileLocation = await uploadFileToS3(files.document[0]);
                 // const fileLocation="TESTING";
                 console.log({ fileLocation });
                 if (fileLocation) {

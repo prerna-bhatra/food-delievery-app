@@ -10,13 +10,13 @@ const sequelize = new Sequelize(
     {
       host:  process.env.DB_HOST,
       dialect:  'postgres',
-      port: '10020',
-      dialectOptions: {
-        ssl: {
-          require: true, // This will help you. But you will see nwe error
-          rejectUnauthorized: false // This line will fix new error
-        }
-      },   
+      port: '50013',
+      // dialectOptions: {
+      //   ssl: {
+      //     require: true, // This will help you. But you will see nwe error
+      //     rejectUnauthorized: false // This line will fix new error
+      //   }
+      // },   
      }
   );
 

@@ -6,7 +6,7 @@ const fs = require('fs');
 AWS.config.update({
   accessKeyId: process.env.ACCESS_KEY_ID,
   secretAccessKey: process.env.SECRET_ACCESS_KEY,
-  region: process.env.ACCESS_KEY_ID.REGION
+  region: process.env.REGION
 });
 
 // Create S3 instance
@@ -14,6 +14,13 @@ const s3 = new AWS.S3();
 
 // Handle file upload
 const uploadFileToS3 = (file) => {
+
+  console.log({
+    accessKeyId: process.env.ACCESS_KEY_ID,
+    secretAccessKey: process.env.SECRET_ACCESS_KEY,
+    region: process.env.REGION,
+    bucket: process.env.BUCKET_NAME
+  });
 
   const fileName = file.originalFilename;
   const mimeType = file.mimeType;

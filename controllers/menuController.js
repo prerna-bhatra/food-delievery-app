@@ -1,5 +1,5 @@
 const { Menu } = require('../models/menu.model');
-const { uploadFile } = require("../utills/gcpUploader");
+const { uploadFileToS3 } = require("../utills/s3Uploader");
 const { where } = require('sequelize');
 const formidable = require("formidable")
 
@@ -33,7 +33,7 @@ exports.addDishBulk = async (req, res) => {
                     if (files.hasOwnProperty(key)) {
                         const file = files[key];
                         console.log({ file });
-                        const fileLocation = await uploadFile(file[0]); 
+                        const fileLocation = await uploadFileToS3(file[0]); 
                         console.log({fileLocation});
                         const index = key.match(/\d+/)[0]; 
                         const dishName = fields[`dishes[${index}].name`];
