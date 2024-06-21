@@ -18,7 +18,7 @@ const socketHandler = (server) => {
             console.log({ data , token: data.token });
             const stringData = JSON.stringify(data)
             try {
-                const response = await axios.post('http://rasachat.zapto.org:5005/webhooks/rest/webhook', {
+                const response = await axios.post('http://localhost:5005/webhooks/rest/webhook', {
                     sender: 'user',
                     message: stringData,
                     // token: data.token
