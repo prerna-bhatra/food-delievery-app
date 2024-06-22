@@ -4,11 +4,11 @@ const pg = require("pg")
 // console.log({db:process.env.DB_HOST});
 
 const sequelize = new Sequelize(
-  process.env.DB_NAME,
-  process.env.DB_USER,
-  process.env.DB_PASSWORD,
+  "bu5ntbmo07mpfpaikkhl",
+  "urffpo2zvyhgjsosw83p",
+  "IzvOjOBNsFHqc7OuInLWbUnhQNcd6Q",
   {
-    host: process.env.DB_HOST,
+    host: "bu5ntbmo07mpfpaikkhl-postgresql.services.clever-cloud.com",
     port: '50013',
     dialect: "postgres",
     dialectModule: pg,
